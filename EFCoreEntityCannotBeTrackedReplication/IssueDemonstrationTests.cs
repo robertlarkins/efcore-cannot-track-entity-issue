@@ -15,17 +15,13 @@ namespace EFCoreEntityCannotBeTrackedReplication
         [Fact]
         public async Task Demonstrate_Issue()
         {
+            await AddSingleAppointmentToDatabase(AppointmentStatus.Planned);
+
             await using var context = new MyDbContext(ContextOptions);
 
             // Pull all statuses into the context, this line is needed to demonstrate the issue.
             // This situation could occur when if multiple appointments are retrieved and they cover all the different statuses.
             var appointmentStatuses = context.AppointmentStatuses.ToList();
-
-            var myAppointment = new Appointment(AppointmentStatus.Planned);
-
-            context.Appointments.Attach(myAppointment);
-            await context.SaveChangesAsync();
-
             var appointment = GetAppointment(context);
 
             appointment.SetStatus(AppointmentStatus.Occurring);
@@ -36,6 +32,41 @@ namespace EFCoreEntityCannotBeTrackedReplication
             var appointmentAgain = GetAppointment(context);
 
             appointmentAgain.AppointmentStatus.Should().Be(AppointmentStatus.Occurring);
+        }
+
+        [Fact]
+        public async Task Demonstrate_Issue_With_Multiple_Appointments()
+        {
+            await AddSingleAppointmentToDatabase(AppointmentStatus.Planned);
+            await AddSingleAppointmentToDatabase(AppointmentStatus.Occurring);
+            await AddSingleAppointmentToDatabase(AppointmentStatus.Finished);
+
+            await using var context = new MyDbContext(ContextOptions);
+
+            // Change all appointments to finished
+            var appointments = context.Appointments.Include(x => x.AppointmentStatus).ToList();
+
+            foreach (var appointment in appointments)
+            {
+                // Even adding this if statement does not avoid the issue
+                if (appointment.AppointmentStatus == AppointmentStatus.Finished)
+                {
+                    continue;
+                }
+
+                appointment.SetStatus(AppointmentStatus.Finished);
+            }
+
+            await context.SaveChangesAsync();
+
+            context.Dispose();
+
+            // The following does not get reached
+            await using var context2 = new MyDbContext(ContextOptions);
+
+            var appointments2 = context2.Appointments.Include(x => x.AppointmentStatus).ToList();
+
+            appointments2.Select(x => x.AppointmentStatus).Should().AllBeEquivalentTo(AppointmentStatus.Finished);
         }
 
         /// <summary>
@@ -92,6 +123,16 @@ namespace EFCoreEntityCannotBeTrackedReplication
             var appointmentAgain = GetAppointmentWithAsNoTracking(context);
 
             appointmentAgain.AppointmentStatus.Should().Be(AppointmentStatus.Occurring);
+        }
+
+        private async Task AddSingleAppointmentToDatabase(AppointmentStatus status)
+        {
+            await using var context = new MyDbContext(ContextOptions);
+            var myAppointment = new Appointment(status);
+
+            context.Appointments.Attach(myAppointment);
+            await context.SaveChangesAsync();
+            context.Dispose();
         }
 
         private Appointment GetAppointment(MyDbContext context)
