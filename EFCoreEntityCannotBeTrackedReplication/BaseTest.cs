@@ -37,18 +37,13 @@ namespace EFCoreEntityCannotBeTrackedReplication
             return connection;
         }
 
-        private async void Seed()
+        private void Seed()
         {
             using var context = new MyDbContext(ContextOptions);
 
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             context.Database.Migrate();
-
-            var myAppointment = new Appointment(AppointmentStatus.Planned);
-
-            context.Appointments.Attach(myAppointment);
-            await context.SaveChangesAsync();
         }
     }
 }

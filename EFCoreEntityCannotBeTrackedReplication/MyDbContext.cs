@@ -28,6 +28,7 @@ namespace EFCoreEntityCannotBeTrackedReplication
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            // Cannot be tracked exception gets thrown here.
             var enumerationEntries = ChangeTracker.Entries()
                 .Where(x => EnumerationTypes.Contains(x.Entity.GetType()));
 
