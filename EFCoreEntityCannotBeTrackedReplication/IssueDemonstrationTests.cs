@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -29,6 +30,8 @@ namespace EFCoreEntityCannotBeTrackedReplication
 
             // The following does not get reached
             var appointmentAgain = GetAppointment(context);
+
+            // appointmentAgain.AppointmentStatus.Should().Be(AppointmentStatus.Occurring);
         }
 
         /// <summary>
@@ -55,6 +58,8 @@ namespace EFCoreEntityCannotBeTrackedReplication
 
             // The following does not get reached
             var appointmentAgain = GetAppointment(context);
+
+            appointmentAgain.AppointmentStatus.Should().Be(AppointmentStatus.Occurring);
         }
 
         [Fact]
@@ -75,6 +80,8 @@ namespace EFCoreEntityCannotBeTrackedReplication
 
             // The following code is reached as none of the changes are tracked
             var appointmentAgain = GetAppointmentWithAsNoTracking(context);
+
+            appointmentAgain.AppointmentStatus.Should().Be(AppointmentStatus.Occurring);
         }
 
         private Appointment GetAppointment(MyDbContext context)
