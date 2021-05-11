@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCoreEntityCannotBeTrackedIssue", "EFCoreEntityCannotBeTrackedIssue.csproj", "{C37480CE-CD00-49FC-8803-3FE3BD1FBF77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCoreEntityCannotBeTrackedReplication", "..\EFCoreEntityCannotBeTrackedReplication\EFCoreEntityCannotBeTrackedReplication.csproj", "{ABD139AD-A5B4-44D5-8A9C-14EDE7550112}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C37480CE-CD00-49FC-8803-3FE3BD1FBF77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C37480CE-CD00-49FC-8803-3FE3BD1FBF77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C37480CE-CD00-49FC-8803-3FE3BD1FBF77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C37480CE-CD00-49FC-8803-3FE3BD1FBF77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABD139AD-A5B4-44D5-8A9C-14EDE7550112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD139AD-A5B4-44D5-8A9C-14EDE7550112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABD139AD-A5B4-44D5-8A9C-14EDE7550112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABD139AD-A5B4-44D5-8A9C-14EDE7550112}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {181AE274-D490-461A-BFA9-CD49D341C7AF}
+	EndGlobalSection
+EndGlobal
