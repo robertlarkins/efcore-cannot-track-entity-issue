@@ -17,6 +17,10 @@ namespace EFCoreEntityCannotBeTrackedReplication
         {
             await using var context = new MyDbContext(ContextOptions);
 
+            // Pull all statuses into the context, this line is needed to demonstrate the issue.
+            // This situation could occur when if multiple appointments are retrieved and they cover all the different statuses.
+            var appointmentStatuses = context.AppointmentStatuses.ToList();
+
             var myAppointment = new Appointment(AppointmentStatus.Planned);
 
             context.Appointments.Attach(myAppointment);
@@ -31,7 +35,7 @@ namespace EFCoreEntityCannotBeTrackedReplication
             // The following does not get reached
             var appointmentAgain = GetAppointment(context);
 
-            // appointmentAgain.AppointmentStatus.Should().Be(AppointmentStatus.Occurring);
+            appointmentAgain.AppointmentStatus.Should().Be(AppointmentStatus.Occurring);
         }
 
         /// <summary>
@@ -39,11 +43,14 @@ namespace EFCoreEntityCannotBeTrackedReplication
         /// We are using NpgSql if that matters.
         /// </summary>
         [Fact]
-        public async Task Demonstrate_Issue_Resolved_Using_Set_AsNoTracking()
+        public async Task Demonstrate_Issue_Occurring_When_Using_Set_AsNoTracking()
         {
             await using var context = new MyDbContext(ContextOptions);
 
             context.Set<AppointmentStatus>().AsNoTracking();
+
+            // Pull all statuses into the context, this line is needed to demonstrate the issue.
+            var appointmentStatuses = context.AppointmentStatuses.ToList();
 
             var myAppointment = new Appointment(AppointmentStatus.Planned);
 
@@ -63,9 +70,12 @@ namespace EFCoreEntityCannotBeTrackedReplication
         }
 
         [Fact]
-        public async Task Demonstrate_AsNoTracking_Does_Not_Save_Change()
+        public async Task Demonstrate_Issue_Occurring_When_AsNoTracking_On_Query()
         {
             await using var context = new MyDbContext(ContextOptions);
+
+            // Pull all statuses into the context, this line is needed to demonstrate the issue.
+            var appointmentStatuses = context.AppointmentStatuses.ToList();
 
             var myAppointment = new Appointment(AppointmentStatus.Planned);
 
